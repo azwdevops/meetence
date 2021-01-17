@@ -1,0 +1,185 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+.header {
+  grid-area: header;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  max-height: 60px;
+  background-color: #4aa1f7;
+  max-width: 100%;
+  z-index: 1;
+}
+.main {
+  grid-area: main;
+  min-height: 80vh;
+  max-width: 100%;
+  padding: 5px 20px;
+}
+.footer {
+  grid-area: footer;
+  height: 80px;
+  max-width: 100%;
+  padding: 5px 20px;
+}
+
+.button,
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.button:hover,
+button:hover {
+  opacity: 0.6;
+  color: yellow;
+}
+a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* styles for dialog components */
+.dialog {
+  padding: 15px 20px;
+}
+.dialog > h3 {
+  color: dodgerblue;
+  text-align: center;
+  text-decoration: underline;
+}
+
+/* for items spanning the entire width */
+.dialog__rowSingleItem {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 95% !important;
+  grid-template-areas:
+    "label"
+    "content";
+  margin: 5px auto 10px auto;
+}
+.dialog__rowSingleItem > label {
+  grid-area: label;
+  color: purple;
+  font-weight: bold;
+  padding: 3px 8px;
+  max-width: 900px;
+  width: 100%;
+  margin: 2px auto;
+}
+
+/* for two items sharing the width */
+.dialog__row {
+  display: grid;
+  margin: 10px auto;
+  column-gap: 20px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  max-width: 95%;
+}
+.dialog__row > label {
+  color: purple;
+  font-weight: bold;
+  padding: 3px 8px;
+}
+.dialog__row > .label__left {
+  grid-column: 1/4;
+  grid-row: 1;
+}
+.dialog__row > .label__right {
+  grid-column: 4/7;
+  grid-row: 1;
+}
+.dialog__row > .input__left,
+.dialog__row > .select__left {
+  grid-column: 1/4;
+  grid-row: 2;
+  max-width: 95%;
+}
+.dialog__row > .input__right,
+.dialog__row > .select__right {
+  grid-column: 4/7;
+  grid-row: 2;
+  max-width: 100%;
+}
+
+.dialog__row > input,
+.dialog__row > select,
+.dialog__rowSingleItem > input,
+.dialog__rowSingleItem > select {
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 2px solid lightgray;
+  outline: none;
+}
+.dialog__row > input:focus,
+.dialog__rowSingleItem > input:focus,
+.dialog__row > select:focus {
+  border: 2px solid dodgerblue;
+}
+.form__Buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 950px;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.form__Buttons > button {
+  padding: 7px 20px;
+  margin: 0px 20px;
+  max-width: 150px;
+  color: white;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.form__Buttons > button:nth-child(1) {
+  background-color: red;
+  justify-self: start;
+}
+.form__Buttons > button:nth-child(2) {
+  background-color: dodgerblue;
+  justify-self: end;
+}
+
+.extra__formButtons {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  margin: 15px auto;
+  color: dodgerblue;
+  font-weight: bold;
+}
+.google__signin {
+  padding: 8px 15px;
+  background-color: #6851fc;
+  color: white;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+/* end of dialog components */
+
+#pageSubmitting,
+#formSubmitting {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed !important;
+}
