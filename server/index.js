@@ -1,15 +1,24 @@
 // packages import
-
 import express from "express";
+import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 
 // files imports
 import config from "./config/keys.js";
 
+// routes import
+import userRoutes from "./routes/user.js";
+
 const app = express();
 
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
 app.use(cors());
+
+// routes
+app.use("/api/user", userRoutes);
 
 // connect to mongodb
 

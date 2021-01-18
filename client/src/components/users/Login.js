@@ -1,4 +1,5 @@
 // import installed packages
+import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GoogleLogin } from "react-google-login";
 
@@ -7,28 +8,72 @@ import { GoogleLogin } from "react-google-login";
 // import material ui items
 
 // import shared/global items
-
+import globals from "../../shared/globals";
+import { ifEmpty } from "../../shared/sharedFunctions";
 // import components/pages
 import MinDialog from "../common/MinDialog";
 
 // import redux API
 import { CLOSE_LOGIN } from "../../redux/actions/types";
+import { setAlert } from "../../redux/actions/shared";
+import { login } from "../../redux/actions/auth";
 
-const Login = ({ googleSucess, googleFailure }) => {
+const Login = () => {
   const dispatch = useDispatch();
   const loginForm = useSelector((state) => state.auth.loginForm);
+  const alert = useSelector((state) => state.shared.alert);
+  const [loading, setLoading] = useState(false);
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleLogin = (e) => {};
+  // refs
+  const btnRef = useRef();
+  const formRef = useRef();
 
-  const handleChange = (e) => {};
+  // destructuring
+  const { error, fillFields } = globals;
+  const { email, password } = loginData;
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (ifEmpty(login)) {
+      return setAlert(dispatch, error, fillFields);
+    }
+
+    if (btnRef.current) {
+      formRef.current.setAttribute("id", "pageSubmitting");
+    }
+    setLoading(true);
+    // call the signup action creator
+    dispatch(login(loginData));
+
+    setLoading(false);
+    if (btnRef.current) {
+      formRef.current.removeAttribute("id", "pageSubmitting");
+    }
+  };
+
+  const handleChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
 
   return (
     <MinDialog isOpen={loginForm}>
       <form className="dialog">
         <h3>Login here</h3>
+        <p className={`response__message ${alert.alertType}`}>
+          {alert.status && alert.msg}
+        </p>
         <div className="dialog__rowSingleItem">
           <label htmlFor="">Email</label>
-          <input type="email" name="email" onChange={handleChange} required />
+          <input
+            type="email"
+            name="email"
+            onChange={handleChange}
+            value={email}
+          />
         </div>
         <div className="dialog__rowSingleItem">
           <label htmlFor="">Password</label>
@@ -36,28 +81,18 @@ const Login = ({ googleSucess, googleFailure }) => {
             type="password"
             name="password"
             onChange={handleChange}
-            required
+            value={password}
           />
         </div>
         <div className="form__Buttons">
           <button type="button" onClick={() => dispatch({ type: CLOSE_LOGIN })}>
             Close
           </button>
-          <button type="submit">Login</button>
+          <button type="submit" onClick={handleLogin}>
+            Login
+          </button>
         </div>
-        <div className="extra__formButtons">
-          <GoogleLogin
-            clientId="419209056133-go6htupj48ppega1d66bj5suhvd9f6ic.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <button onClick={renderProps.onClick} className="google__signin">
-                Google Sign In
-              </button>
-            )}
-            onSuccess={googleSucess}
-            onFailure={googleFailure}
-            cookiePolicy="single_host_origin"
-          />
-        </div>
+        <div className="extra__formButtons"></div>
       </form>
     </MinDialog>
   );

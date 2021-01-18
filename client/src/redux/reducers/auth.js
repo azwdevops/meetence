@@ -11,10 +11,17 @@ import {
 const initialState = {
   signupForm: false,
   loginForm: false,
+  user: {
+    first_name: "",
+    last_name: "",
+    username: "",
+    email: "",
+  },
 };
 
-const userReducer = (state = initialState, action) => {
-  switch (action.type) {
+const authReducer = (state = initialState, action) => {
+  const { type, payload } = action;
+  switch (type) {
     case OPEN_SIGNUP:
       return {
         ...state,
@@ -36,11 +43,14 @@ const userReducer = (state = initialState, action) => {
         loginForm: false,
       };
     case AUTH_SUCCESS:
-      console.log(action?.payload);
-      return state;
+      localStorage.setItem("session_cookie", payload?.token);
+      return { ...state, user: payload?.user };
+    case LOGOUT:
+      localStorage.clear();
+      return initialState;
     default:
       return state;
   }
 };
 
-export default userReducer;
+export default authReducer;

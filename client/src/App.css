@@ -183,3 +183,26 @@ a {
   pointer-events: none;
   cursor: not-allowed !important;
 }
+
+/* error styling */
+.response__message {
+  font-weight: bold;
+  text-align: center;
+  height: 25px;
+  font-size: 1rem;
+  margin-top: 5px auto;
+  padding-bottom: 8px;
+  text-align: center;
+  width: 90%;
+  position: absolute;
+  max-width: 100%;
+}
+/* we set the background for each item since we only want it to be visible when the error is being shown */
+.error {
+  color: red;
+  background-color: #f1f1f1;
+}
+.success {
+  color: #02ab4b;
+  background-color: #f1f1f1;
+}

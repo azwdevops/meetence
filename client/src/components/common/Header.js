@@ -22,20 +22,17 @@ import {
 const Header = () => {
   const dispatch = useDispatch();
   const user = {
-    result: {
-      name: "azw",
-    },
+    name: "azw",
   };
 
   const googleSucess = async (res) => {
-    const result = res?.profileObj;
-    const token = res?.tokenId;
+    console.log(res);
+    // extract the details from this user object to send to the signup body
+    const user = res?.profileObj;
+    // const token = res?.tokenId;
+    // after getting the google results send this to server to create an account
 
-    try {
-      dispatch({ type: AUTH_SUCCESS, payload: { result, token } });
-    } catch (error) {
-      console.log(error);
-    }
+    // only dispatch auth success after successful signup
   };
   const googleFailure = (error) => {
     console.log(error);
@@ -57,13 +54,13 @@ const Header = () => {
             <>
               <div>
                 <Avatar
-                  alt={user.result.name}
-                  src={user.result.imageUrl}
+                  alt={user.name}
+                  src={user.imageUrl}
                   className="user__image"
                 >
-                  {user.result.name.charAt(0)}
+                  {user.name.charAt(0)}
                 </Avatar>
-                <h6>{user.result.name}</h6>
+                <h6>{user.name}</h6>
                 <i className="fa fa-caret-down"></i>
               </div>
               <ul className="dropdown">
@@ -90,7 +87,7 @@ const Header = () => {
         )}
       </nav>
       {/* components */}
-      <Login googleSucess={googleSucess} googleFailure={googleFailure} />
+      <Login />
       <Signup googleSucess={googleSucess} googleFailure={googleFailure} />
     </>
   );
