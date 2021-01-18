@@ -1,71 +1,51 @@
 // import installed packages
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
 // import styles
-import "../../styles/components/Header.css";
+
+import "../../styles/components/common/Header.css";
 // import material ui items
 import Avatar from "@material-ui/core/Avatar";
-
 // import shared/global items
-
+import { showNavbar } from "../../shared/scripts";
 // import components/pages
 import Login from "../users/Login";
 import Signup from "../users/Signup";
 
 // import redux API
-import {
-  AUTH_SUCCESS,
-  OPEN_LOGIN,
-  OPEN_SIGNUP,
-} from "../../redux/actions/types";
+import { OPEN_LOGIN, OPEN_SIGNUP } from "../../redux/actions/types";
+import { logout } from "../../redux/actions/auth";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const user = {
-    name: "azw",
-  };
-
-  const googleSucess = async (res) => {
-    console.log(res);
-    // extract the details from this user object to send to the signup body
-    const user = res?.profileObj;
-    // const token = res?.tokenId;
-    // after getting the google results send this to server to create an account
-
-    // only dispatch auth success after successful signup
-  };
-  const googleFailure = (error) => {
-    console.log(error);
-  };
+  const history = useHistory();
+  const session_cookie = localStorage.getItem("session_cookie");
+  const username = useSelector((state) => state.auth.user?.username);
+  const userImage = useSelector((state) => state.auth?.userImage);
 
   return (
     <>
-      <nav className="header__section">
-        <div className="header__left">
-          <Link to="/">
-            <h1>MERN Auth</h1>
-          </Link>
+      <header className="header" id="header">
+        <div className="header__toggle">
+          <i className="bx bx-menu" id="header-toggle" onClick={showNavbar}></i>
+          <h1>azw</h1>
         </div>
-        <div className="header__center">
-          <h4>Middle section</h4>
-        </div>
-        {!user ? (
+
+        {session_cookie ? (
           <div className="header__right authenticated">
             <>
               <div>
-                <Avatar
-                  alt={user.name}
-                  src={user.imageUrl}
-                  className="user__image"
-                >
-                  {user.name.charAt(0)}
+                <Avatar alt={username} src={userImage} className="user__image">
+                  {username.charAt(0)}
                 </Avatar>
-                <h6>{user.name}</h6>
-                <i className="fa fa-caret-down"></i>
+                <h6>{username}</h6>
+                <i className="bx bx-caret-down"></i>
               </div>
               <ul className="dropdown">
-                <li>Profile</li>
-                <li>Logout</li>
+                <li>
+                  <Link to="/dashboard/">Profile</Link>
+                </li>
+                <li onClick={() => dispatch(logout(history))}>Logout</li>
               </ul>
             </>
           </div>
@@ -85,10 +65,10 @@ const Header = () => {
             </span>
           </div>
         )}
-      </nav>
+      </header>
       {/* components */}
       <Login />
-      <Signup googleSucess={googleSucess} googleFailure={googleFailure} />
+      <Signup />
     </>
   );
 };

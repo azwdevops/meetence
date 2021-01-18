@@ -1,33 +1,59 @@
-// installed apps
+// import installed packages
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-// styles
+// import styles
 import "./App.css";
+// import material ui items
 
-// components/pages imports
+// import shared/global items
+import PrivateRoute from "./shared/PrivateRoute";
+// import components/pages
 import Header from "./components/common/Header";
-import Footer from "./components/common/Footer";
+// import Footer from "./components/common/Footer";
 import Home from "./pages/Home";
+import Sidebar from "./components/common/Sidebar";
+import Dashboard from "./pages/Dashboard";
+import ActivateAccount from "./pages/ActivateAccount";
+
+// import redux API
+import { getuser } from "./redux/actions/auth";
 
 function App() {
+  const dispatch = useDispatch();
+  const session_cookie = localStorage.getItem("session_cookie");
+
+  useEffect(() => {
+    // get user on page refresh
+    if (session_cookie) {
+      dispatch(getuser());
+    }
+  }, [dispatch, session_cookie]);
+
   return (
-    <div className="app">
-      <Router>
-        <header className="header">
-          <Header />
-        </header>
+    <Router>
+      <div id="body-pd">
+        <Header />
+        <Sidebar />
         <Switch>
-          <main className="main">
-            {/* unauthenticated routes */}
-            <Route exact path="/" component={Home} />
-            {/* authenticated routes */}
-          </main>
+          {/* unauthenticated routes */}
+          <Route exact path="/" component={Home} />
+          <Route
+            exact
+            path="/user/activate/:token/"
+            component={ActivateAccount}
+          />
+          {/* authenticated routes */}
+          <PrivateRoute
+            exact
+            path="/dashboard/"
+            component={Dashboard}
+            session_cookie={session_cookie}
+          />
         </Switch>
-        <footer className="footer">
-          <Footer />
-        </footer>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 

@@ -6,7 +6,7 @@ import { GoogleLogin } from "react-google-login";
 // import styles
 
 // import material ui items
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 // import shared/global items
 import globals from "../../shared/globals";
 import { ifEmpty } from "../../shared/sharedFunctions";
@@ -33,15 +33,14 @@ const Login = () => {
   const formRef = useRef();
 
   // destructuring
-  const { error, fillFields } = globals;
+  const { error } = globals;
   const { email, password } = loginData;
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (ifEmpty(login)) {
-      return setAlert(dispatch, error, fillFields);
+    if (ifEmpty(loginData)) {
+      return dispatch(setAlert(error, "Email and password required"));
     }
-
     if (btnRef.current) {
       formRef.current.setAttribute("id", "pageSubmitting");
     }
@@ -49,10 +48,10 @@ const Login = () => {
     // call the signup action creator
     dispatch(login(loginData));
 
-    setLoading(false);
     if (btnRef.current) {
       formRef.current.removeAttribute("id", "pageSubmitting");
     }
+    setLoading(false);
   };
 
   const handleChange = (e) => {
@@ -61,7 +60,7 @@ const Login = () => {
 
   return (
     <MinDialog isOpen={loginForm}>
-      <form className="dialog">
+      <form className="dialog" ref={formRef}>
         <h3>Login here</h3>
         <p className={`response__message ${alert.alertType}`}>
           {alert.status && alert.msg}
@@ -75,6 +74,11 @@ const Login = () => {
             value={email}
           />
         </div>
+        {loading && (
+          <CircularProgress
+            style={{ position: "absolute", marginLeft: "40%" }}
+          />
+        )}
         <div className="dialog__rowSingleItem">
           <label htmlFor="">Password</label>
           <input
@@ -88,7 +92,7 @@ const Login = () => {
           <button type="button" onClick={() => dispatch({ type: CLOSE_LOGIN })}>
             Close
           </button>
-          <button type="submit" onClick={handleLogin}>
+          <button type="submit" onClick={handleLogin} ref={btnRef}>
             Login
           </button>
         </div>

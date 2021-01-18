@@ -52,10 +52,11 @@ const Signup = ({ googleSucess, googleFailure }) => {
   const handleSignup = (e) => {
     e.preventDefault();
     if (ifEmpty(newUser)) {
-      return setAlert(dispatch, error, fillFields);
+      return dispatch(setAlert(error, fillFields));
     }
+    // confirm passwords match
     if (password !== confirm_password) {
-      return setAlert(dispatch, error, "Passwords should match");
+      return dispatch(setAlert(error, "Passwords should match"));
     }
     if (btnRef.current) {
       formRef.current.setAttribute("id", "pageSubmitting");
@@ -64,6 +65,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
     // call the signup action creator
     dispatch(signup(newUser));
 
+    // finally remove these changes
     setLoading(false);
     if (btnRef.current) {
       formRef.current.removeAttribute("id", "pageSubmitting");
@@ -75,7 +77,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
   };
   return (
     <MediumDialog isOpen={signupForm}>
-      <form className="dialog">
+      <form className="dialog" ref={formRef}>
         <h3>Create new account</h3>
         <p className={`response__message ${alert.alertType}`}>
           {alert.status && alert.msg}
@@ -159,7 +161,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
           >
             Close
           </button>
-          <button type="submit" onClick={handleSignup}>
+          <button type="submit" onClick={handleSignup} ref={btnRef}>
             Sign Up
           </button>
         </div>

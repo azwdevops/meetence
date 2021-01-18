@@ -1,11 +1,12 @@
 // packages import
 import express from "express";
+import "dotenv/config.js"; // to help with loading of environment variables
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
+
 import cors from "cors";
 
-// files imports
-import config from "./config/keys.js";
+// DB config import
+import "./db/connectDB.js";
 
 // routes import
 import userRoutes from "./routes/user.js";
@@ -19,20 +20,6 @@ app.use(cors());
 
 // routes
 app.use("/api/user", userRoutes);
-
-// connect to mongodb
-
-mongoose
-  .connect(config.mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    console.log("MongoDB connected...");
-  })
-  .catch((err) => console.log(err.message));
 
 const PORT = process.env.PORT || 5000;
 

@@ -11,6 +11,7 @@ import {
 const initialState = {
   signupForm: false,
   loginForm: false,
+  loggedIn: false,
   user: {
     first_name: "",
     last_name: "",
@@ -43,10 +44,8 @@ const authReducer = (state = initialState, action) => {
         loginForm: false,
       };
     case AUTH_SUCCESS:
-      localStorage.setItem("session_cookie", payload?.token);
-      return { ...state, user: payload?.user };
+      return { ...state, user: payload, loggedIn: true };
     case LOGOUT:
-      localStorage.clear();
       return initialState;
     default:
       return state;

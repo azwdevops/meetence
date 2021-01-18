@@ -1,40 +1,41 @@
+/*===== GOOGLE FONTS =====*/
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+/*===== VARIABLES CSS =====*/
+:root {
+  --header-height: 3rem;
+  --nav-width: 68px;
+  /*===== Colors =====*/
+  --first-color: #4723d9;
+  --first-color-light: #afa5d9;
+  --white-color: #f7f6fb;
+
+  /*===== Font and typography =====*/
+  --body-font: "Nunito", sans-serif;
+  --normal-font-size: 1rem;
+
+  /*===== z index =====*/
+  --z-fixed: 100;
+}
+/*===== BASE =====*/
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  margin: var(--header-height) 0 0 0;
+  padding: 0 1rem;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  transition: 0.5s;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.app {
-  display: grid;
-  grid-template-columns: 1fr;
-  max-width: 100%;
-  grid-template-areas:
-    "header"
-    "main"
-    "footer";
-}
-.header {
-  grid-area: header;
-  height: 60px;
-  position: sticky;
-  top: 0;
-  left: 0;
-  max-height: 60px;
-  background-color: #4aa1f7;
-  max-width: 100%;
-  z-index: 1;
-}
-.main {
-  grid-area: main;
-  min-height: 80vh;
-  max-width: 100%;
-  padding: 5px 20px;
-}
-.footer {
-  grid-area: footer;
-  height: 80px;
-  max-width: 100%;
-  padding: 5px 20px;
 }
 
 .button,
@@ -205,4 +206,17 @@ a {
 .success {
   color: #02ab4b;
   background-color: #f1f1f1;
+}
+
+/* ===== MEDIA QUERIES=====*/
+@media screen and (min-width: 768px) {
+  body {
+    margin: calc(var(--header-height) + 1rem) 0 0 0;
+    padding-left: calc(var(--nav-width) + 2rem);
+  }
+
+  /*Add padding body desktop*/
+  .body-pd {
+    margin-left: calc(var(--nav-width));
+  }
 }

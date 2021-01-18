@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
 
     let decodedData;
     if (token) {
-      decodedData = jwt.verify(token, "test");
+      decodedData = jwt.verify(token, process.env.SECRET);
       req.userId = decodedData?.id;
       // this means that from the controllers, the req will have a req.userId which means the user is authenticated
       // before running controller logic for any action that needs to be validated, run
