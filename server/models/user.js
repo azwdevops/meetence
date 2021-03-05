@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 const Model = mongoose.model;
@@ -48,7 +48,5 @@ const confirmationCodeSchema = Schema({
   },
 });
 
-const User = Model("User", userSchema);
-const ConfirmationCode = Model("ConfirmationCode", confirmationCodeSchema);
-
-export default { User, ConfirmationCode };
+exports.User = Model("User", userSchema);
+exports.ConfirmationCode = Model("ConfirmationCode", confirmationCodeSchema);

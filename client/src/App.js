@@ -16,6 +16,8 @@ import Home from "./pages/Home";
 import Sidebar from "./components/common/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import ActivateAccount from "./pages/ActivateAccount";
+import VideoChatRoom from "./pages/VideoChatRoom";
+import NotFound from "./pages/NotFound";
 
 // import redux API
 import { getuser } from "./redux/actions/auth";
@@ -45,12 +47,18 @@ function App() {
             component={ActivateAccount}
           />
           {/* authenticated routes */}
+          <Route
+            exact
+            path="/go-live/:videoChatRoomId/"
+            component={VideoChatRoom}
+          />
           <PrivateRoute
             exact
             path="/dashboard/"
             component={Dashboard}
             session_cookie={session_cookie}
           />
+          <Route component={NotFound} />
         </Switch>
       </div>
     </Router>

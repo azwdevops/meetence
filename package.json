@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "This is the server side",
   "main": "index.js",
-  "type": "module",
   "author": "azw",
   "license": "ISC",
   "dependencies": {
@@ -15,7 +14,9 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.12",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.4.17",
+    "socket.io": "^3.1.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/index.js",
+    "start": "nodemon server/index.js",
     "backend": "nodemon server/index.js",
     "frontend": "npm run start --prefix client",
     "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\""

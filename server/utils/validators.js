@@ -2,7 +2,7 @@
 const specialCharacters = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
 // function to validate password
-export const validatePassword = (password) => {
+exports.validatePassword = (password) => {
   // return message and status
   if (password.length < 8) {
     //password length

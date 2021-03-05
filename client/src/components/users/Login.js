@@ -1,7 +1,6 @@
 // import installed packages
 import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GoogleLogin } from "react-google-login";
 
 // import styles
 

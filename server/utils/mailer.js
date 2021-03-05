@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
+exports.transporter = nodemailer.createTransport({
   service: "GMAIL",
   auth: {
     user: process.env.EMAIL_HOST_USER,
@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const ActivationEmail = (email, username, url) => {
+exports.ActivationEmail = (email, username, url) => {
   return {
     to: email,
     subject: "Activate your account",
@@ -27,5 +27,3 @@ export const ActivationEmail = (email, username, url) => {
     `,
   };
 };
-
-export default { transporter, ActivationEmail };

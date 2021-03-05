@@ -1,9 +1,9 @@
-import express from "express";
+const express = require("express");
 
-import { login, signup, getUser, activate } from "../controllers/user.js";
+const { login, signup, getUser, activate } = require("../controllers/user.js");
 
 // middleware for authentication purposes
-import auth from "../middleware/auth.js";
+const { auth } = require("../middleware/auth.js");
 
 const router = express.Router();
 
@@ -14,4 +14,5 @@ router.post("/login/", login);
 //example applying auth, say getting user data, auth is between the url and the name, see below
 router.get("/get-user-data/", auth, getUser);
 
-export default router;
+const userRoutes = router;
+module.exports = userRoutes;

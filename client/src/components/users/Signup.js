@@ -1,28 +1,26 @@
 // import installed packages
-import { useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { GoogleLogin } from "react-google-login";
+import { useState } from "react";
+import { connect } from "react-redux";
+
 // import styles
 
 // import material ui items
 
 // import shared/global items
 import globals from "../../shared/globals";
-import { ifEmpty } from "../../shared/sharedFunctions";
+import { ifEmpty, resetFormValues } from "../../shared/sharedFunctions";
 // import components/pages
 import MediumDialog from "../common/MediumDialog";
 // import redux API
-import { CLOSE_SIGNUP } from "../../redux/actions/types";
+import { CLOSE_SIGNUP, START_LOADING } from "../../redux/actions/types";
 import { signup } from "../../redux/actions/auth";
 import { setAlert } from "../../redux/actions/shared";
 
-const Signup = ({ googleSucess, googleFailure }) => {
-  const dispatch = useDispatch();
-  const signupForm = useSelector((state) => state.auth.signupForm);
-  const alert = useSelector((state) => state.shared.alert);
+const Signup = (props) => {
+  const { signupForm, loading, alert } = props;
+  const { startLoading, newAlert, signupUser, closeSignup } = props; // dispatch actions
 
   // internal state
-  const [loading, setLoading] = useState(false);
   const [newUser, setNewUser] = useState({
     first_name: "",
     last_name: "",
@@ -31,10 +29,6 @@ const Signup = ({ googleSucess, googleFailure }) => {
     password: "",
     confirm_password: "",
   });
-
-  // refs
-  const btnRef = useRef();
-  const formRef = useRef();
 
   //############### destructuring code ###################//
   const {
@@ -49,27 +43,29 @@ const Signup = ({ googleSucess, googleFailure }) => {
 
   //#################end of destructuring ###########//
 
+  // function to clear form values
+  const resetSignup = () => {
+    resetFormValues(newUser);
+  };
+
+  const closeSignupForm = () => {
+    closeSignup();
+    resetSignup();
+  };
+
   const handleSignup = (e) => {
     e.preventDefault();
     if (ifEmpty(newUser)) {
-      return dispatch(setAlert(error, fillFields));
+      return newAlert(error, fillFields);
     }
     // confirm passwords match
     if (password !== confirm_password) {
-      return dispatch(setAlert(error, "Passwords should match"));
+      return newAlert(error, "Passwords should match");
     }
-    if (btnRef.current) {
-      formRef.current.setAttribute("id", "pageSubmitting");
-    }
-    setLoading(true);
-    // call the signup action creator
-    dispatch(signup(newUser));
 
-    // finally remove these changes
-    setLoading(false);
-    if (btnRef.current) {
-      formRef.current.removeAttribute("id", "pageSubmitting");
-    }
+    startLoading();
+    // call the signup action creator
+    signupUser(newUser, resetSignup);
   };
 
   const handleChange = (e) => {
@@ -77,7 +73,7 @@ const Signup = ({ googleSucess, googleFailure }) => {
   };
   return (
     <MediumDialog isOpen={signupForm}>
-      <form className="dialog" ref={formRef}>
+      <form className="dialog" id={loading ? "formSubmitting" : ""}>
         <h3>Create new account</h3>
         <p className={`response__message ${alert.alertType}`}>
           {alert.status && alert.msg}
@@ -155,32 +151,33 @@ const Signup = ({ googleSucess, googleFailure }) => {
           />
         </div>
         <div className="form__Buttons">
-          <button
-            type="button"
-            onClick={() => dispatch({ type: CLOSE_SIGNUP })}
-          >
+          <button type="button" onClick={closeSignupForm}>
             Close
           </button>
-          <button type="submit" onClick={handleSignup} ref={btnRef}>
+          <button type="submit" onClick={handleSignup}>
             Sign Up
           </button>
-        </div>
-        <div className="extra__formButtons">
-          <GoogleLogin
-            clientId="419209056133-go6htupj48ppega1d66bj5suhvd9f6ic.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <button onClick={renderProps.onClick} className="google__signin">
-                Sign Up With Google
-              </button>
-            )}
-            onSuccess={googleSucess}
-            onFailure={googleFailure}
-            cookiePolicy="single_host_origin"
-          />
         </div>
       </form>
     </MediumDialog>
   );
 };
 
-export default Signup;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.shared?.loading,
+    alert: state.shared?.alert,
+    signupForm: state.auth.signupForm,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startLoading: () => dispatch({ type: START_LOADING }),
+    newAlert: (type, msg) => dispatch(setAlert(type, msg)),
+    signupUser: (newUser, resetSignup) =>
+      dispatch(signup(newUser, resetSignup)),
+    closeSignup: () => dispatch({ type: CLOSE_SIGNUP }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

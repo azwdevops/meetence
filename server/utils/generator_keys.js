@@ -1,9 +1,9 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 // this file is user to generate keys, it's an inbuilt module in node
 // generate new tokens if the application is being used or there is a risk for the existing keys
 
-import crypto from "crypto";
+const crypto = require("crypto");
 
 const key1 = crypto.randomBytes(32).toString("hex"); // to be used for signing tokens
 const key2 = crypto.randomBytes(32).toString("hex"); // to be used for email verification
@@ -31,4 +31,4 @@ let decoded = jwt.verify(
   "44310dcc583228d1475e11f29dff42ec438b488aaf12386cde93351698d13446"
 );
 
-console.log(decoded);
+// console.log(decoded);

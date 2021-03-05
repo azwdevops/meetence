@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 // this middleware is going to be used in routes and is used to verify a user, the normal way i do verify_user in python
 
-const auth = async (req, res, next) => {
+exports.auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
 
@@ -20,5 +20,3 @@ const auth = async (req, res, next) => {
     console.log(error);
   }
 };
-
-export default auth;

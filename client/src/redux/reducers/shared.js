@@ -1,4 +1,4 @@
-import { SET_ALERT, REMOVE_ALERT } from "../actions/types";
+import * as actionTypes from "../actions/types";
 
 export const sharedInitialState = {
   alert: {
@@ -6,21 +6,32 @@ export const sharedInitialState = {
     alertType: "", // either success or error
     msg: "",
   },
+  loading: false,
 };
 
 const sharedReducer = (state = sharedInitialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case SET_ALERT:
+    case actionTypes.SET_ALERT:
       return {
         ...state,
         alert: payload,
       };
-    case REMOVE_ALERT:
+    case actionTypes.REMOVE_ALERT:
       return {
         ...state,
         alert: payload,
+      };
+    case actionTypes.START_LOADING:
+      return {
+        ...state,
+        loading: true,
+      };
+    case actionTypes.STOP_LOADING:
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

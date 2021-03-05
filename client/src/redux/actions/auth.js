@@ -8,6 +8,7 @@ import {
   CLOSE_LOGIN,
   CLOSE_SIGNUP,
   LOGOUT,
+  STOP_LOADING,
 } from "../actions/types";
 import { setAlert } from "./shared";
 
@@ -17,24 +18,24 @@ import globals from "../../shared/globals";
 const { error, success } = globals;
 
 // sign up user
-export const signup = (newUser) => async (dispatch) => {
-  try {
-    // destructure the payload got from the request
-    const { data } = await api.signUp(newUser);
-    // dispatch success message
-    dispatch({ type: AUTH_SUCCESS, payload: data?.user });
-    dispatch(setAlert(success, data.msg));
-    setTimeout(() => {
-      dispatch({ type: CLOSE_SIGNUP });
-    }, 3000);
-  } catch (err) {
-    // if bad client request
-    if (err.response.status === 400) {
-      dispatch(setAlert(error, err.response.data.msg));
-    } else {
-      console.log(err);
-    }
-  }
+export const signup = (newUser, resetSignup) => async (dispatch) => {
+  await api
+    .signUp(newUser)
+    .then((res) => {
+      dispatch(setAlert(success, res.data.msg));
+      resetSignup(); // clear form values
+    })
+    .catch((err) => {
+      // if bad client request
+      if (err.response.status === 400) {
+        dispatch(setAlert(error, err.response.data.msg));
+      } else {
+        console.log(err);
+      }
+    })
+    .finally(() => {
+      dispatch({ type: STOP_LOADING });
+    });
 };
 
 // activate user account
@@ -79,16 +80,16 @@ export const login = (loginData) => async (dispatch) => {
 
 // get user data
 export const getuser = () => async (dispatch) => {
-  try {
-    // destructure the payload got from the request
-    const { data } = await api.getUser();
-    // dispatch success message
-    dispatch({ type: AUTH_SUCCESS, payload: data?.user });
-  } catch (error) {
-    dispatch({ type: LOGOUT });
-    localStorage.clear();
-    console.log(error);
-  }
+  await api
+    .getUser()
+    .then((res) => {
+      dispatch({ type: AUTH_SUCCESS, payload: res.data?.user });
+    })
+    .catch((err) => {
+      dispatch({ type: LOGOUT });
+      localStorage.clear();
+      console.log(error);
+    });
 };
 
 // logout user

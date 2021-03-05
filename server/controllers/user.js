@@ -1,14 +1,14 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // utils functions
-import mailer from "../utils/mailer.js";
+const mailer = require("../utils/mailer.js");
 
 // models
-import user from "../models/user.js";
+const user = require("../models/user.js");
 
 // validators
-import { validatePassword } from "../utils/validators.js";
+const { validatePassword } = require("../utils/validators.js");
 
 // destructuring
 const { User, ConfirmationCode } = user;
@@ -18,7 +18,8 @@ const SECRET = process.env.SECRET; // for signing tokens
 const EMAIL_SECRET = process.env.EMAIL_SECRET; // for signing emails
 
 //======================== SIGNUP USER ==========================//
-export const signup = async (req, res) => {
+exports.signup = async (req, res) => {
+  console.log("CONTROLLER OKAY");
   const {
     first_name,
     last_name,
@@ -84,7 +85,7 @@ export const signup = async (req, res) => {
 };
 
 // ========================   ACTIVATE ACCOUNT ========================//
-export const activate = async (req, res) => {
+exports.activate = async (req, res) => {
   const token = req.body.token;
   try {
     const decodedToken = jwt.verify(token, EMAIL_SECRET);
@@ -111,7 +112,7 @@ export const activate = async (req, res) => {
 };
 
 //======================== LOGIN USER ===============================//
-export const login = async (req, res) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -151,7 +152,7 @@ export const login = async (req, res) => {
 };
 
 //======================= GET USER ========================//
-export const getUser = async (req, res) => {
+exports.getUser = async (req, res) => {
   if (!req.userId) {
     return res.json({ msg: "unauthenticated" });
   }

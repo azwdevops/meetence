@@ -7,3 +7,10 @@ export const ifEmpty = (object) => {
   }
   return false;
 };
+
+// function to reset form values to blank
+export const resetFormValues = (object) => {
+  for (const i in object) {
+    object[i] = "";
+  }
+};
