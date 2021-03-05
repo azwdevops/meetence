@@ -1,6 +1,6 @@
 **/node_modules
 
-**/.eslint
+**/.eslintcache
 
 # since this is a private project, i will allow upload of .env to github, but i will change it later 
 #  when i have teams maintaining the code
