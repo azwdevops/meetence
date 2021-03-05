@@ -25,8 +25,11 @@ class VideoChatRoom extends Component {
       videoChatRoomId: props.match.params?.videoChatRoomId,
       socket: io(ENDPOINT),
       myPeer: new Peer(undefined),
-      peers: {}, // to hold state for all connected people in the chat
+      peers: {},
     };
+    // to hold the value for all connected people in the chat with respect to current user
+    // since state is raising problems, we just use a normal javascript variable
+    this.peers = {};
   }
 
   componentDidMount() {
@@ -36,19 +39,6 @@ class VideoChatRoom extends Component {
     myPeer.on("open", (connectedUserId) => {
       socket.emit("join-room", videoChatRoomId, connectedUserId);
     });
-    // API.get(`/api/chat/${this.state.videoChatRoomId}/`)
-    //   .then((res) => {
-    //     myPeer.on("open", () => {
-    //       socket.emit("join-room", videoChatRoomId, userId);
-    //     });
-    //     socket.on("user-connected", (userId) => {
-    //       console.log("USER CONNECTED", userId);
-    //       this.initializeVideoConnection();
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   }
 
   // initialize a web connection video for my case, and add it to the video stream
@@ -77,10 +67,9 @@ class VideoChatRoom extends Component {
         // when user leaves the video chat, remove them from the video grid, to avoid videos left hanging when they leave
         // this ensures clean video grid
         socket.on("user-disconnected", (userId) => {
-          console.log(userId);
-          // check if peers exist and close connection when user is disconnected
-          if (this.state.peers[userId]) {
-            this.state.peers[userId].close();
+          // on user disconnected event, we close the connection of the user who disconnected
+          if (this.peers[userId]) {
+            this.peers[userId].close();
           }
         });
       });
@@ -107,7 +96,7 @@ class VideoChatRoom extends Component {
     });
     // add the user and create their state of peers, this will help us keep track of if a user os still on call,
     // if not we close their connection by listening to the user-disconnected event
-    this.setState({ ...this.state, peers: { userId: call } });
+    this.peers[userId] = call;
   };
 
   render() {
